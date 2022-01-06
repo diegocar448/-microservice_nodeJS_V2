@@ -29,9 +29,11 @@ usersRoute.get('/users/:uuid', async (req:Request<{ uuid: string }>, res:Respons
 
 // post /users
 // caso envie os dados em um formato diferente JSON a requisição retornará um json vazio {}
-usersRoute.post('/users', (req:Request, res:Response, next:NextFunction) => {    
-    const newUser = req.body;    
-    res.status(StatusCodes.CREATED).send(newUser);
+usersRoute.post('/users', async (req:Request, res:Response, next:NextFunction) => {    
+    const newUser = req.body; 
+         
+    const uuid = await userRepository.create(newUser);    
+    res.status(StatusCodes.CREATED).send(uuid);
 });
 
 
