@@ -9,10 +9,27 @@ class UserRepository {
             SELECT uuid, username
             FROM application_user
         `;
-        //após pegar o resultado da consulta, vai adicionar na variavel
-        const result = await db.query<User>(query);
-        const rows = result.rows;
+        //após pegar o resultado da consulta, apenas a propriedade { rows } da consulta
+        const { rows } = await db.query<User>(query);        
         return rows || [];
+    }
+
+    async findById(uuid: string): Promise<User> {
+        //não injetamos valor na SQL string para evitar SQL Injection
+        const query = `
+            SELECT uuid, username
+            FROM application_user
+            WHERE uuid = $1  
+        `; 
+
+        //aqui pegamo o nosso uuid
+        const values = [uuid];
+
+       //passando o uuid como parâmetro | após pegar o resultado da consulta, apenas a propriedade { rows } da consulta
+        const { rows } = await db.query<User>(query, values);
+        const [ user ] = rows;
+
+        return user;
     }
 }
 

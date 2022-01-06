@@ -8,19 +8,21 @@ const usersRoute = Router();
 
 // get/users
 usersRoute.get('/users', async (req:Request, res:Response, next:NextFunction) => {
-    //const users = [{ userName: 'Diego' }];
+    //Aqui chamamos o metodo em repository que fará a consulta no BD e retornará os dados
     const users = await userRepository.findAllUsers();
+
     // aqui passamos o StatusCodes  usando o repositorio (npm install --save 'http-status-code')
     res.status(StatusCodes.OK).send( users );
 });
 
 // get /:uuid
 // podemos tbm tipar o parâmetro em Request com o Request<{ uuid:string }>
-usersRoute.get('/users/:uuid', (req:Request<{ uuid: string }>, res:Response, next:NextFunction) => {
-
+usersRoute.get('/users/:uuid', async (req:Request<{ uuid: string }>, res:Response, next:NextFunction) => {
     //aqui pegar o valor passado na url
     const uuid = req.params.uuid;    
-    res.status(StatusCodes.OK).send({ uuid });
+
+    const user = await userRepository.findById(uuid);
+    res.status(StatusCodes.OK).send( user );
 });
 
 
