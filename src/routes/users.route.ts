@@ -1,6 +1,7 @@
 import { Router, Request, Response,  NextFunction, response } from 'express';
 import StatusCodes from 'http-status-codes';
 import userRepository from '../repositories/user.repository';
+import DatabaseError from '../models/errors/database.error.mode';
 
 //configuração de rota
 const usersRoute = Router();
@@ -18,18 +19,27 @@ usersRoute.get('/users', async (req:Request, res:Response, next:NextFunction) =>
 // get /:uuid
 // podemos tbm tipar o parâmetro em Request com o Request<{ uuid:string }>
 usersRoute.get('/users/:uuid', async (req:Request<{ uuid: string }>, res:Response, next:NextFunction) => {
-    //aqui pegar o valor passado na url
-    const uuid = req.params.uuid;    
+    try {
+        //aqui pegar o valor passado na url
+        const uuid = req.params.uuid;    
 
-    const user = await userRepository.findById(uuid);
-    res.status(StatusCodes.OK).send( user );
+        const user = await userRepository.findById(uuid);
+        res.status(StatusCodes.OK).send( user );
+    } catch (error) {
+        if(error instanceof DatabaseError){
+            res.status(StatusCodes.BAD_REQUEST);
+        }else{
+            res.status(StatusCodes.INTERNAL_SERVER_ERROR);
+        }        
+    }
+    
 });
 
 
 
 // post /users
 // caso envie os dados em um formato diferente JSON a requisição retornará um json vazio {}
-usersRoute.post('/users', async (req:Request, res:Response, next:NextFunction) => {    
+usersRoute.post('/users', async (req:Request, res:Response, next:NextFunction) => {
     const newUser = req.body; 
          
     const uuid = await userRepository.create(newUser);    
