@@ -2,6 +2,7 @@ import express, {Request, Response, NextFunction} from 'express';
 import errorHandler from './middlewares/error-handle.middleware';
 import statusRoute from './routes/status.route';
 import usersRoute from './routes/users.route';
+import authorizationRoute from './routes/authorization.route';
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 //utilize essa configuração de users.route.ts (Configurações de Rotas)
 app.use(usersRoute);
 app.use(statusRoute);
+app.use(authorizationRoute);
 
 //Configuração dos Handlers de Erro
 app.use(errorHandler);
