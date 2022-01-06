@@ -24,7 +24,7 @@ class UserRepository {
                 SELECT uuid, username
                 FROM application_user
                 WHERE uuid = $1  
-            `; 
+            `;
 
             //aqui pegamo o nosso uuid
             const values = [uuid];

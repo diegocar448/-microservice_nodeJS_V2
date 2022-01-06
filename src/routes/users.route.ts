@@ -1,4 +1,4 @@
-import { Router, Request, Response,  NextFunction, response } from 'express';
+import { Router, Request, Response,  NextFunction} from 'express';
 import StatusCodes from 'http-status-codes';
 import userRepository from '../repositories/user.repository';
 import DatabaseError from '../models/errors/database.error.mode';
@@ -21,16 +21,12 @@ usersRoute.get('/users', async (req:Request, res:Response, next:NextFunction) =>
 usersRoute.get('/users/:uuid', async (req:Request<{ uuid: string }>, res:Response, next:NextFunction) => {
     try {
         //aqui pegar o valor passado na url
-        const uuid = req.params.uuid;    
+        const uuid = req.params.uuid;
 
         const user = await userRepository.findById(uuid);
         res.status(StatusCodes.OK).send( user );
-    } catch (error) {
-        if(error instanceof DatabaseError){
-            res.status(StatusCodes.BAD_REQUEST);
-        }else{
-            res.status(StatusCodes.INTERNAL_SERVER_ERROR);
-        }        
+    } catch (error) {        
+        next(error)
     }
     
 });
@@ -49,15 +45,22 @@ usersRoute.post('/users', async (req:Request, res:Response, next:NextFunction) =
 
 // put /users/:uuid
 usersRoute.put('/users/:uuid', async (req:Request<{ uuid: string }>, res:Response, next:NextFunction) => { 
-    const uuid = req.params.uuid;
-    const modifiedUser = req.body;
 
-    //atribuir mais o uuid para o response
-    modifiedUser.uuid = uuid;
+    try {
+        const uuid = req.params.uuid;
+        const modifiedUser = req.body;
 
-    await userRepository.update(modifiedUser);
+        //atribuir mais o uuid para o response
+        modifiedUser.uuid = uuid;
 
-    res.status(StatusCodes.OK).send();
+        await userRepository.update(modifiedUser);
+
+        res.status(StatusCodes.OK).send();
+        
+    } catch (error) {
+        
+    }
+    
 });
 
 // delete /users/:uuid

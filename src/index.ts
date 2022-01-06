@@ -1,4 +1,5 @@
 import express, {Request, Response, NextFunction} from 'express';
+import errorHandler from './middlewares/error-handle.middleware';
 import statusRoute from './routes/status.route';
 import usersRoute from './routes/users.route';
 
@@ -14,6 +15,9 @@ app.use(express.urlencoded({ extended: true }));
 //utilize essa configuração de users.route.ts (Configurações de Rotas)
 app.use(usersRoute);
 app.use(statusRoute);
+
+//Configuração dos Handlers de Erro
+app.use(errorHandler);
 
 // Aqui definimos em qual porta será executada o nosso app (Inicialização do servidor)
 app.listen(3000, () =>{
