@@ -1,13 +1,15 @@
 import { Router, Request, Response,  NextFunction, response } from 'express';
 import StatusCodes from 'http-status-codes';
+import userRepository from '../repositories/user.repository';
 
 //configuração de rota
 const usersRoute = Router();
 
 
 // get/users
-usersRoute.get('/users', (req:Request, res:Response, next:NextFunction) => {
-    const users = [{ userName: 'Diego' }];
+usersRoute.get('/users', async (req:Request, res:Response, next:NextFunction) => {
+    //const users = [{ userName: 'Diego' }];
+    const users = await userRepository.findAllUsers();
     // aqui passamos o StatusCodes  usando o repositorio (npm install --save 'http-status-code')
     res.status(StatusCodes.OK).send( users );
 });
