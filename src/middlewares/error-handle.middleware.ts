@@ -3,8 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import DatabaseError from '../models/errors/database.error.model';
 
 function errorHandler(error: any, req:Request, res:Response, next:NextFunction){
-    if(error instanceof DatabaseError){
-        console.log("Primeiro");
+    if(error instanceof DatabaseError){        
         console.log(res);
         res.sendStatus(StatusCodes.BAD_REQUEST);
     }else{        
