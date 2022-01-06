@@ -1,5 +1,6 @@
 // Esse arquivo será responsavel pela conexão do BD
 
+
 import { Pool } from 'pg';
 
 const connectionString = '';
