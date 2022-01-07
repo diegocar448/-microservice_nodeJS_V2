@@ -9,7 +9,7 @@ import userRepository from '../repositories/user.repository';
 
 async function bearerAuthenticationMiddleware(req:Request, res:Response, next:NextFunction){
     try {
-
+        
         const authorizationHeader = req.headers['authorization'];
 
         if (!authorizationHeader) {
@@ -21,15 +21,15 @@ async function bearerAuthenticationMiddleware(req:Request, res:Response, next:Ne
         if(authorizationType !== 'Bearer' || !token){
             throw new ForbiddenError('Tipo de autenticação inválido');
         }
-
+        
         const tokenPayload = JWT.verify(token,'my_secret_key');
 
         
-
-        if (typeof tokenPayload === 'object' || !tokenPayload.sub) {
-            throw new ForbiddenError('Token inválido');
+        
+        if (typeof tokenPayload !== 'object' || !tokenPayload.sub) {            
+            throw new ForbiddenError('Token inválido');            
         }
-
+        
         //const uuid = tokenPayload.sub.toString();
         //const user = await userRepository.findById(uuid);
         const user = {
