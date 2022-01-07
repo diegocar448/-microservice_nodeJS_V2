@@ -4,21 +4,24 @@ import userRepository from '../repositories/user.repository';
 import JWT from 'jsonwebtoken';
 import { StatusCodes } from 'http-status-codes';
 import basicAuthenticationMiddleware from '../middlewares/basic-authentication.middleware';
+import jwtAuthenticationMiddleware from '../middlewares/jwt-authentication.middleware';
 
 
 const authorizationRoute = Router();
 
+
+
 /* aqui deixamos esse middleware de token apenas para rota token */
+//authorizationRoute.post('/token', basicAuthenticationMiddleware, async (req:Request, res:Response, next:NextFunction) => {
 authorizationRoute.post('/token', basicAuthenticationMiddleware, async (req:Request, res:Response, next:NextFunction) => {
-
-        // "iss" O domínio da aplicação geradora do token
-        // "sub" É o assunto do token, mas é muito utilizado para guarda o ID do usuário
-        // "aud" Define quem pode usar o token
-        // "exp" Data para expiração do token
-        // "nbf" Define uma data para qual o token não pode ser aceito antes dela
-        // "iat" Data de criação do token
-        // "jti" O id do token
-
+    
+    // "iss" O domínio da aplicação geradora do token
+    // "sub" É o assunto do token, mas é muito utilizado para guarda o ID do usuário
+    // "aud" Define quem pode usar o token
+    // "exp" Data para expiração do token
+    // "nbf" Define uma data para qual o token não pode ser aceito antes dela
+    // "iat" Data de criação do token
+    // "jti" O id do token
 
     try {
         const user = req.user;
@@ -34,15 +37,22 @@ authorizationRoute.post('/token', basicAuthenticationMiddleware, async (req:Requ
 
         //vamos criar um token aqui
         const jwt = JWT.sign(jwtPayload, secretKey, jwtOptions);
-        res.status(StatusCodes.OK).json({ token:jwt });        
+        res.status(StatusCodes.OK).json({ token:jwt });
 
     } catch (error) {
         next(error);
-    }
-
-
-    
+    }    
 });
+
+
+authorizationRoute.post('/token/validate', jwtAuthenticationMiddleware, (req:Request, res:Response, next:NextFunction) => {    
+    
+    res.sendStatus(StatusCodes.OK);       
+});
+
+
+
+
 
 
 export default authorizationRoute;

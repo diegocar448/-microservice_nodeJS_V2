@@ -4,9 +4,12 @@ import statusRoute from './routes/status.route';
 import usersRoute from './routes/users.route';
 import authorizationRoute from './routes/authorization.route';
 import basicAuthenticationMiddleware from './middlewares/basic-authentication.middleware';
-import bearerAuthenticationMiddleware from './middlewares/bearer-authentication.middleware';
+import jwtAuthenticationMiddleware from './middlewares/jwt-authentication.middleware';
 
 const app = express();
+
+
+//A ordem de como são listados os app.use são importantes quando usamos o express/nodeJS
 
 //Aqui tratamos retorno como JSON (Configurações da Aplicação)
 app.use(express.json());
@@ -17,10 +20,14 @@ app.use(express.urlencoded({ extended: true }));
 
 //utilize essa configuração de users.route.ts (Configurações de Rotas)
 //para todos os end-points de usersRoute vão precisar antes estar autênticados com o Bearer token
-app.use(bearerAuthenticationMiddleware, usersRoute);
+//app.use(jwtAuthenticationMiddleware, usersRoute);
+
+
 
 app.use(statusRoute);
 app.use(authorizationRoute);
+app.use(jwtAuthenticationMiddleware);
+app.use(usersRoute);
 
 //Configuração dos Handlers de Erro
 app.use(errorHandler);
