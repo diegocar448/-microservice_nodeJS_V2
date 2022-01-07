@@ -4,6 +4,7 @@ import statusRoute from './routes/status.route';
 import usersRoute from './routes/users.route';
 import authorizationRoute from './routes/authorization.route';
 import basicAuthenticationMiddleware from './middlewares/basic-authentication.middleware';
+import bearerAuthenticationMiddleware from './middlewares/bearer-authentication.middleware';
 
 const app = express();
 
@@ -15,7 +16,8 @@ app.use(express.urlencoded({ extended: true }));
 
 
 //utilize essa configuração de users.route.ts (Configurações de Rotas)
-app.use(usersRoute);
+app.use(bearerAuthenticationMiddleware, usersRoute);
+//app.use(usersRoute);
 app.use(statusRoute);
 app.use(authorizationRoute);
 
