@@ -16,8 +16,9 @@ app.use(express.urlencoded({ extended: true }));
 
 
 //utilize essa configuração de users.route.ts (Configurações de Rotas)
+//para todos os end-points de usersRoute vão precisar antes estar autênticados com o Bearer token
 app.use(bearerAuthenticationMiddleware, usersRoute);
-//app.use(usersRoute);
+
 app.use(statusRoute);
 app.use(authorizationRoute);
 

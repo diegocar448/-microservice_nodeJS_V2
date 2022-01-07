@@ -38,8 +38,6 @@ async function bearerAuthenticationMiddleware(req:Request, res:Response, next:Ne
         };
 
         req.user = user;
-
-
         next();
     } catch (error) {
         next(error);
