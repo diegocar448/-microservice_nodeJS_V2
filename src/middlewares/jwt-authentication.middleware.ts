@@ -9,9 +9,6 @@ import userRepository from '../repositories/user.repository';
 
 async function  jwtAuthenticationMiddleware(req:Request, res:Response, next:NextFunction){
     try {
-        
-        
-
         const authorizationHeader = req.headers['authorization'];
 
         if (!authorizationHeader) {
@@ -38,8 +35,7 @@ async function  jwtAuthenticationMiddleware(req:Request, res:Response, next:Next
             };
 
             req.user = user;        
-            next();
-            
+            next();            
         } catch (error) {
             throw new ForbiddenError('Token inválido');
         }        

@@ -85,7 +85,7 @@ class UserRepository {
     }
 
     async findUsernameAndPassword(username:string, password:string): Promise<User | null>{
-
+        
         try {
             const query = `
             SELECT uuid, username
@@ -98,7 +98,8 @@ class UserRepository {
 
             //aqui passamos as variáveis uma com a consulta e outra com a senha
             const { rows } =  await db.query<User>(query, values);
-            const [user] = rows;
+            const [user] = rows; 
+            
             return user || null;
             
         } catch (error) {

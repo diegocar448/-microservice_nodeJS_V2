@@ -27,12 +27,12 @@ async function basicAuthenticationMiddleware(req:Request, res:Response, next: Ne
 
         //aqui fazemos um split para quebrar o conteúdo deixar cada parte uma variavel username e senha
         const [username, password] = tokenContent.split(':');
-
+        
         //retornará um erro forbidden caso usuario ou senha não estiver preenchido
         if(!username || !password){
             throw new ForbiddenError('Credênciadas não preenchidas');
         }
-
+        
         const user  = await userRepository.findUsernameAndPassword(username, password);
 
         if (!user) {
@@ -42,6 +42,7 @@ async function basicAuthenticationMiddleware(req:Request, res:Response, next: Ne
         //Com a requisição autenticada, colocamos o usuario dentro da requisição
         //Permite receber a propagação dessa requisição e ter acesso ao usuario
         req.user = user;
+        console.log(user);
         //caso não tenha erro, se chegar o erro então erá para o middleware auth-authentication.middleware
         //ou vamos para o proximo handler ou vai para o error handler next(error)
         next();

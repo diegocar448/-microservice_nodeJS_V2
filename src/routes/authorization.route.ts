@@ -1,7 +1,7 @@
 import { Router, Request, Response,  NextFunction} from 'express';
 import ForbiddenError from '../models/errors/forbidden.error.model';
 import userRepository from '../repositories/user.repository';
-import JWT from 'jsonwebtoken';
+import JWT, { SignOptions } from 'jsonwebtoken';
 import { StatusCodes } from 'http-status-codes';
 import basicAuthenticationMiddleware from '../middlewares/basic-authentication.middleware';
 import jwtAuthenticationMiddleware from '../middlewares/jwt-authentication.middleware';
@@ -32,9 +32,9 @@ authorizationRoute.post('/token', basicAuthenticationMiddleware, async (req:Requ
         }
         
         const jwtPayload = { username: user.username };
-        const jwtOptions = { subject: user?.uuid };
+        const jwtOptions: SignOptions = { subject: user?.uuid, expiresIn: '15m' }; //refresh Token a cada 10 minutos
         const secretKey = 'my_secret_key';
-
+        
         //vamos criar um token aqui
         const jwt = JWT.sign(jwtPayload, secretKey, jwtOptions);
         res.status(StatusCodes.OK).json({ token:jwt });
